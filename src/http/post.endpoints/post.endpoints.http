@@ -1,0 +1,16 @@
+
+
+PATCH  http://localhost:3000/posts
+Content-Type: application/json
+{
+    "title": "second greatest eee",
+    "id": 1,
+    "authorId" : 1,
+    "postType": "series",
+    "postStatus": "published",
+    "content": "@Password123",
+    "metaOptions": {"metaValue": "{\"sidebar\": true}"},
+    "tags": [1,2]
+}
+
+DELETE http://localhost:3000/tags?id=1

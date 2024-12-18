@@ -1,0 +1,4 @@
+#this is our origin endpoint
+GET HTTP://localhost:3000
+
+

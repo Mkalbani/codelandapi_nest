@@ -1,0 +1,4 @@
+GET http://localhost:3000/posts
+
+
+DELETE http://localhost:3000/posts?id=13
