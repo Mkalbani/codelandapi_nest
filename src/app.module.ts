@@ -17,6 +17,9 @@ import { User } from './users/user.entity';
 import { MetaOptionsService } from './meta-options/provider/meta-options.service';
 import { TagsService } from './tags/provider/tags.service';
 import { UserService } from './users/providers/users.services';
+import { AuthModule } from './auth/auth.module';
+import { BcryptProvider } from './auth/providers/bcrypt.provider';
+import { HashingProvider } from './auth/providers/hashing.provider';
 
 
 @Module({
@@ -29,7 +32,7 @@ import { UserService } from './users/providers/users.services';
       useFactory: async(configService:ConfigService)=>({
       type: 'postgres',
       host: 'localhost',
-      port: 5433,
+      port: 5432,
       username: 'postgres',
       password: configService.get<string>('PGPASSWORD'),
       database: 'afrifarmer',
@@ -43,10 +46,11 @@ import { UserService } from './users/providers/users.services';
     TagsModule,
     MetaOptionsModule,
     PostModule,
+    AuthModule,
     
 ],
   controllers: [AppController],
-  providers: [AppService, PostServices, MetaOptionsService, UserService, TagsService],
+  providers: [AppService, PostServices, MetaOptionsService, UserService, TagsService, BcryptProvider, HashingProvider],
   
 })
 export class AppModule {}
