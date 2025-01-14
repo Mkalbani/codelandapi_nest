@@ -50,7 +50,7 @@ import { HashingProvider } from './auth/providers/hashing.provider';
     
 ],
   controllers: [AppController],
-  providers: [AppService, PostServices, MetaOptionsService, UserService, TagsService, BcryptProvider, HashingProvider],
+  providers: [AppService],
   
 })
 export class AppModule {}

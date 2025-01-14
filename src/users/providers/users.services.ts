@@ -1,3 +1,5 @@
+import { FindOneByEmail } from './find-one-by-email';
+import { CreateUserProvider } from './create-user.provider';
 import { AuthService } from './../../auth/providers/auth.service';
 import { BadRequestException, HttpException, HttpStatus, Injectable, RequestTimeoutException } from '@nestjs/common';
 import { GetUserParamDto } from '../dtos/getUser-params.dto';
@@ -10,7 +12,10 @@ import { CreateUserDto } from '../dtos/create-user.dto';
 export class UserService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
-    private readonly authService:AuthService
+    private readonly authService:AuthService,
+    private readonly createUserProvider:CreateUserProvider,
+    private readonly findOneByEmail:FindOneByEmail
+
   ) {}
 
   public findAll(
@@ -40,40 +45,11 @@ export class UserService {
   }
 
   public async createUsers(createUserDto: CreateUserDto) {
-    // check if user already exits
-    let existingUser = undefined
-
-    try {
-      await this.userRepository.findOne({
-      where: { email: createUserDto.email },
-    });
-    } catch (error) {
-      throw new RequestTimeoutException(
-        'Unable to process you request at the moment. Try later',
-         {
-          description: "Error connecting to the db"
-         })
-    }
-    // Handle Error
-   if (existingUser) {
-      throw new BadRequestException('user already exist');
-    } else {
-    }
-
-    //  Create new User
-     let newUser = this.userRepository.create(createUserDto);
-    newUser = await this.userRepository.save(newUser);
-    return newUser;
+    return this.createUserProvider.createUsers(createUserDto)
   }
 
-  public async deleteUser() {
-    throw new HttpException(
-      {
-        status: HttpStatus.GONE,
-        error: 'user deleted successfully',
-      },
-      HttpStatus.GONE,
-    );
+  public async getOneByEmail(email: string){
+    return this.findOneByEmail.findOneByEmail(email)
   }
 
 

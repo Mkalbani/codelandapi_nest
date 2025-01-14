@@ -1,16 +1,21 @@
-import { BadRequestException, Injectable, RequestTimeoutException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, RequestTimeoutException, forwardRef } from '@nestjs/common';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../user.entity';
 import { AuthService } from 'src/auth/providers/auth.service';
+import { HashingProvider } from 'src/auth/providers/hashing.provider';
 
 @Injectable()
 export class CreateUserProvider {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
-    private readonly authService:AuthService
+    private readonly authService:AuthService,
+
+    @Inject(forwardRef(()=>HashingProvider))
+    private readonly hashingProvider:HashingProvider
   ) {}
+
 
       public async createUsers(createUserDto: CreateUserDto) {
     // check if user already exits
@@ -34,7 +39,10 @@ export class CreateUserProvider {
     }
 
     //  Create new User
-     let newUser = this.userRepository.create(createUserDto);
+     let newUser = this.userRepository.create({
+        ...createUserDto,
+        password: await this.hashingProvider.hashPassword(createUserDto.password)
+    });
     newUser = await this.userRepository.save(newUser);
     return newUser;
   }

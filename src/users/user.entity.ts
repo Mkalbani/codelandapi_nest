@@ -15,7 +15,7 @@ export class User {
   @Column('varchar', { unique: true, nullable: false })
   email: string;
 
-  @Column('varchar', { length: 26, nullable: true })
+  @Column('varchar', { nullable: true })
   password: string;
 
   @OneToMany(() => Post, (post) => post.author)
