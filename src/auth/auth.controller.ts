@@ -10,6 +10,7 @@ export class AuthController {
 
     @Post('/sign-in')
     public async SigninDto(@Body() signinDto:SigninDto)  {
+        return await this.authService.SignIn(signinDto)
         
     }
  

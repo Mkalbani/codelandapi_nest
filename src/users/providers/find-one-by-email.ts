@@ -10,7 +10,7 @@ export class FindOneByEmail {
         private userRepository: Repository<User>
     ){}
 
-    public async findOneByEmail(email:string){
+    public async findOneBy(email:string){
         let user: User | undefined
 
         try {
@@ -28,5 +28,6 @@ export class FindOneByEmail {
                 'User does not exist'
             )
         }
+        return user
     }
 }

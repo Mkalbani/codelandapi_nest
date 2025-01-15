@@ -11,9 +11,17 @@ import { CreateUserDto } from '../dtos/create-user.dto';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(User) 
+    // userRepository dependency injection
+    private userRepository: Repository<User>,
+
+    // authService dependency injection
     private readonly authService:AuthService,
+
+    // createUserProvider dependency injection
     private readonly createUserProvider:CreateUserProvider,
+
+    // findonebyemail dependency injection
     private readonly findOneByEmail:FindOneByEmail
 
   ) {}
@@ -49,7 +57,7 @@ export class UserService {
   }
 
   public async getOneByEmail(email: string){
-    return this.findOneByEmail.findOneByEmail(email)
+    return this.findOneByEmail.findOneBy(email)
   }
 
 
