@@ -20,6 +20,11 @@ import { UserService } from './users/providers/users.services';
 import { AuthModule } from './auth/auth.module';
 import { BcryptProvider } from './auth/providers/bcrypt.provider';
 import { HashingProvider } from './auth/providers/hashing.provider';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { AccessTokenGuard } from './auth/guard/access-token/access-token.guard';
+import jwtConfig from './auth/config/jwt.config';
+import { JwtModule } from '@nestjs/jwt';
+import { DataResponseInterceptor } from './common/interceptors/data-response/data-response.interceptor';
 
 
 @Module({
@@ -48,9 +53,18 @@ import { HashingProvider } from './auth/providers/hashing.provider';
     PostModule,
     AuthModule,
     
-],
+       ConfigModule.forFeature(jwtConfig),
+      JwtModule.registerAsync(jwtConfig.asProvider())],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, {
+    provide: APP_GUARD,
+    useClass:AccessTokenGuard
+  },
+  {
+    provide: APP_INTERCEPTOR,
+    useClass: DataResponseInterceptor
+  }
+],
   
 })
 export class AppModule {}

@@ -1,3 +1,4 @@
+import { GenerateTokensProviderTs } from './generate-tokens.provider.ts/generate-tokens.provider.ts';
 import { HashingProvider } from 'src/auth/providers/hashing.provider';
 import { UserService } from 'src/users/providers/users.services';
 import { Inject, Injectable, RequestTimeoutException, UnauthorizedException, forwardRef } from '@nestjs/common';
@@ -17,7 +18,10 @@ constructor(
 
     @Inject(jwtConfig.KEY)
     private readonly jwtConfigtion: ConfigType<typeof jwtConfig>,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+
+    // inject generate token provider
+    private readonly generateTokensProvider:GenerateTokensProviderTs
 ){}
 
 
@@ -44,17 +48,21 @@ constructor(
         if(!isEqual){
             throw new UnauthorizedException('Email/Passwords do not match')
         }
+
+        const token = await this.generateTokensProvider.generateTokens(user)
+        return [token, user]
         
-        // send comfirmation
-        const acces_token = await this.jwtService.signAsync({
-            sub: user.id,
-            email: user.email,
-        },
-        {
-            audience: this.jwtConfigtion.audience,
-            issuer: this.jwtConfigtion.issuer,
-            expiresIn: this.jwtConfigtion.ttl
-        }) 
-        return ({acces_token})
+        // // send comfirmation
+        // const acces_token = await this.jwtService.signAsync({
+        //     sub: user.id,
+        //     email: user.email,
+        // },
+        // {
+        //     audience: this.jwtConfigtion.audience,
+        //     issuer: this.jwtConfigtion.issuer,
+        //     expiresIn: this.jwtConfigtion.ttl,
+        //     secret: this.jwtConfigtion.secret
+        // }) 
+        // return ({acces_token})
     }
 }

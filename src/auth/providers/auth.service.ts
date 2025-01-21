@@ -1,7 +1,9 @@
+import { RefreshTokensProviderTs } from './refresh-tokens.provider.ts';
 import { SignInProvider } from './sign-in.provider';
 import { SigninDto } from './../dto/signin.dto';
-import { Inject, Injectable, forwardRef } from '@nestjs/common';
+import { Body, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { UserService } from 'src/users/providers/users.services';
+import { RefreshTokenDTO } from '../dto/refresh-token.dto';
 
 @Injectable()
 export class AuthService {
@@ -9,7 +11,9 @@ export class AuthService {
         @Inject(forwardRef(() => UserService)) 
         private readonly userService: UserService,
 
-        private readonly signInProvider:SignInProvider
+        private readonly signInProvider:SignInProvider,
+
+        private readonly refreshTokensProviderTs:RefreshTokensProviderTs
     ) {}
 
     
@@ -20,5 +24,9 @@ export class AuthService {
         // throw error if user is not found
         // compare the password with the hass
         // send comfirmative password
+    }
+
+    public async refreshToken(refreshTokenDTO:RefreshTokenDTO){
+        return this.refreshTokensProviderTs.refreshToken(refreshTokenDTO) 
     }
 }

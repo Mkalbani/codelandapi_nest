@@ -12,6 +12,9 @@ import {
   Ip,
   ParseIntPipe,
   DefaultValuePipe,
+  UseGuards,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { GetUserParamDto } from 'src/users/dtos/getUser-params.dto';
@@ -28,6 +31,7 @@ export class UsersController {
     description: 'Users fetched successful based on the query',
   })
   @ApiOperation({ summary: 'this is to get all users and one user' })
+  // @UseGuards(AccessTokenGuard)
   @Get('/:id?')
   @ApiQuery({
     name: 'limit',
@@ -61,6 +65,7 @@ export class UsersController {
     return this.userService.findAll(getUserParamDto, limit, page);
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post()
   public createUsers(
     @Body() createUserDto: CreateUserDto,

@@ -1,7 +1,10 @@
 
 POST  http://localhost:3000/auth/sign-in
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsImVtYWlsIjoiMTA5bWxAZW1haWwuY29tIiwiaWF0IjoxNzM3MzgyOTYyLCJleHAiOjE3MzczODMyNjIsImF1ZCI6ImxvY2FsaG9zdDozMDAwIiwiaXNzIjoibG9jYWxob3N0OjMwMDAifQ.4Hfyjekunl9z85UDr_46to3rHlWd87giU8X-Vhu0Ep0
+
 Content-Type: application/json
 {
     "email": "109ml@email.com",
     "password": "@Password123"
 }
+
