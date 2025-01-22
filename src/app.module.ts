@@ -25,6 +25,8 @@ import { AccessTokenGuard } from './auth/guard/access-token/access-token.guard';
 import jwtConfig from './auth/config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
 import { DataResponseInterceptor } from './common/interceptors/data-response/data-response.interceptor';
+import { MailModule } from './mail/mail.module';
+import { MailService } from './mail/providers/mail.service';
 
 
 @Module({
@@ -54,16 +56,19 @@ import { DataResponseInterceptor } from './common/interceptors/data-response/dat
     AuthModule,
     
        ConfigModule.forFeature(jwtConfig),
-      JwtModule.registerAsync(jwtConfig.asProvider())],
+      JwtModule.registerAsync(jwtConfig.asProvider()),
+      MailModule],
   controllers: [AppController],
-  providers: [AppService, {
-    provide: APP_GUARD,
-    useClass:AccessTokenGuard
-  },
+  providers: [AppService, 
+  //   {
+  //   provide: APP_GUARD,
+  //   useClass:AccessTokenGuard
+  // },
   {
     provide: APP_INTERCEPTOR,
     useClass: DataResponseInterceptor
-  }
+  },
+  MailService
 ],
   
 })

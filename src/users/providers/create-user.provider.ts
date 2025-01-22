@@ -1,3 +1,4 @@
+import { MailService } from './../../mail/providers/mail.service';
 import { BadRequestException, Inject, Injectable, RequestTimeoutException, forwardRef } from '@nestjs/common';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,7 +14,9 @@ export class CreateUserProvider {
     private readonly authService:AuthService,
 
     @Inject(forwardRef(()=>HashingProvider))
-    private readonly hashingProvider:HashingProvider
+    private readonly hashingProvider:HashingProvider,
+
+    private readonly mailService:MailService
   ) {}
 
 
@@ -44,6 +47,14 @@ export class CreateUserProvider {
         password: await this.hashingProvider.hashPassword(createUserDto.password)
     });
     newUser = await this.userRepository.save(newUser);
+
+
+    try {
+      await this.mailService.welcomeEmail(newUser)
+      
+    } catch (error) {
+      new BadRequestException(error)
+    }
     return newUser;
   }
 }
